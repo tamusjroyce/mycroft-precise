@@ -1,3 +1,5 @@
+Construction:  Adding sox noise reduction and possible speech optimizations when recording samples? At least trying to.
+
 # Mycroft Precise
 
 *A lightweight, simple-to-use, RNN wake word listener.*
