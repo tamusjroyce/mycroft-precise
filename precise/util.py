@@ -55,10 +55,20 @@ def load_audio(file: Any) -> np.ndarray:
     return data.astype(np.float32) / float(np.iinfo(data.dtype).max)
 
 
+def clean_audio(filename: str):
+    import subprocess
+    result = subprocess.call(['speexenc', '-w', '--vad', filename, filename + '.spx'])
+    if result == 0:
+        print ('speexenc successfully ran! Running speexdec -> ' + 'speexenc -w --vad ' + filename + ' ' + filename + '.spx')
+        subprocess.call(['sh', '-c', 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav'])
+        print ('speexdec ran! -> ' + 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav')
+
+
 def save_audio(filename: str, audio: np.ndarray):
     import wavio
     save_audio = (audio * np.iinfo(np.int16).max).astype(np.int16)
     wavio.write(filename, save_audio, pr.sample_rate, sampwidth=pr.sample_depth, scale='none')
+    clean_audio(filename)
 
 
 def play_audio(filename: str):

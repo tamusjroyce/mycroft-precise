@@ -79,6 +79,15 @@ def record_until(p, should_return, args):
     return b''.join(frames)
 
 
+def clean_audio(filename: str):
+    import subprocess
+    result = subprocess.call(['speexenc', '-w', '--vad', filename, filename + '.spx'])
+    if result == 0:
+        print ('speexenc successfully ran! Running speexdec -> ' + 'speexenc -w --vad ' + filename + ' ' + filename + '.spx')
+        subprocess.call(['sh', '-c', 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav'])
+        print ('speexdec ran! -> ' + 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav')
+
+
 def save_audio(name, data, args):
     wf = wave.open(name, 'wb')
     wf.setnchannels(args.channels)
@@ -86,6 +95,7 @@ def save_audio(name, data, args):
     wf.setframerate(args.rate)
     wf.writeframes(data)
     wf.close()
+    clean_audio(name)
 
 
 def next_name(name):

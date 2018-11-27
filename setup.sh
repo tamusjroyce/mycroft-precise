@@ -40,11 +40,13 @@ os=$(uname -s)
 if [ "$os" = "Linux" ]; then
     if is_command apt-get; then
         wait_for_apt
-        sudo apt-get install -y python3-pip libopenblas-dev python3-scipy cython libhdf5-dev python3-h5py portaudio19-dev swig libpulse-dev libatlas-base-dev
+        sudo apt-get install -y python3-pip libopenblas-dev python3-scipy cython libhdf5-dev python3-h5py portaudio19-dev swig libpulse-dev libatlas-base-dev sox speex libspeexdsp-dev git
     fi
 elif [ "$os" = "Darwin" ]; then
     if is_command brew; then
         brew install portaudio
+        brew install sox --with-flac --with-libvorbis --with-lame
+        brew install speex
     fi
 fi
 
@@ -61,3 +63,8 @@ fi
 pip install -e runner/
 pip install -e .
 pip install pocketsphinx  # Optional, for comparison
+pip install sox # Optional, clean up recording
+
+git clone https://github.com/xiongyihui/speexdsp-python.git
+cd speexdsp-python
+python setup.py install
