@@ -81,11 +81,31 @@ def record_until(p, should_return, args):
 
 def clean_audio(filename: str):
     import subprocess
+    result = subprocess.call(['sox', '--norm', filename, filename + '.dat.wav'])
+    if result == 0:
+      subprocess.call(['mv', filename + '.dat.wav', filename])
+
     result = subprocess.call(['speexenc', '-w', '--vad', filename, filename + '.spx'])
     if result == 0:
         print ('speexenc successfully ran! Running speexdec -> ' + 'speexenc -w --vad ' + filename + ' ' + filename + '.spx')
-        subprocess.call(['sh', '-c', 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav'])
-        print ('speexdec ran! -> ' + 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav')
+        subprocess.call(['speexdec', filename + '.spx', filename + '.dat.wav'])
+        subprocess.call(['sox', '-L', '-r 16000', '-esi', '-c 1', filename + '.dat.wav', filename + '.clean.wav'])
+        print ('speexdec ran!')
+        subprocess.call(['mv', filename + '.clean.wav', filename])
+        subprocess.call(['rm', filename + '.spx'])
+        subprocess.call(['rm', filename + '.dat.wav'])
+
+# def clean_audio(filename: str):
+#    import subprocess
+#    result = subprocess.call(['sox', '--norm', filename, filename + '.dat.wav'])
+#    if result == 0:
+#      result = subprocess.call(['mv', filename + '.dat.wav', filename])
+
+#    result = subprocess.call(['speexenc', '-w', '--vad', filename, filename + '.spx'])
+#    if result == 0:
+#        print ('speexenc successfully ran! Running speexdec -> ' + 'speexenc -w --vad ' + filename + ' ' + filename + '.spx')
+#        subprocess.call(['sh', '-c', 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav'])
+#        print ('speexdec ran! -> ' + 'speexdec ' + filename + '.spx - | sox -V -t raw -b 16 -L -r 16k -e un -c 1 - ' + filename + '.clean.wav')
 
 
 def save_audio(name, data, args):
