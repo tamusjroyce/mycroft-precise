@@ -24,7 +24,7 @@ scipy==1.1.0
 six==1.11.0
 sonopy==0.1.2
 tensorboard==1.8.0
-tensorflow==1.8.0
+tensorflow>=1.8.0
 termcolor==1.1.0
 typing==3.6.4
 wavio==0.0.3
