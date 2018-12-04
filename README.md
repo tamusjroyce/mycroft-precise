@@ -1,4 +1,6 @@
-Construction:  Adding sox noise reduction and possible speech optimizations when recording samples? At least trying to.
+Construction:  Adding sox noise reduction and possible speech optimizations when recording samples? At least trying to. Conversion to speex and back to wav with sox doing normalization has been added. No parameter to invoke this additional feature yet.
+
+precise-listen may or may not be broken? In progress (driven by what we need for a customer).
 
 # Mycroft Precise
 
